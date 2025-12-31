@@ -23,7 +23,6 @@ func InitLogger() error {
 		return err
 	}
 
-	// Başlık
 	writeLog("========================================")
 	writeLog("TOR SCRAPER - DETAYLI LOG KAYDI")
 	writeLog("========================================")
@@ -82,26 +81,26 @@ func LogStep(step int, total int, message string) {
 
 func PrintInfo(format string, args ...interface{}) {
 	msg := fmt.Sprintf(format, args...)
-	fmt.Printf("ℹ️  %s\n", msg)
-	LogInfo(msg)
+	fmt.Printf("ℹ️ %s\n", msg)
+	LogInfo("%s", msg)
 }
 
 func PrintSuccess(format string, args ...interface{}) {
 	msg := fmt.Sprintf(format, args...)
 	fmt.Printf("✓ %s\n", msg)
-	LogSuccess(msg)
+	LogSuccess("%s", msg)
 }
 
 func PrintError(format string, args ...interface{}) {
 	msg := fmt.Sprintf(format, args...)
 	fmt.Printf("✗ %s\n", msg)
-	LogError(msg)
+	LogError("%s", msg)
 }
 
 func PrintWarning(format string, args ...interface{}) {
 	msg := fmt.Sprintf(format, args...)
 	fmt.Printf("⚠  %s\n", msg)
-	LogWarning(msg)
+	LogWarning("%s", msg)
 }
 
 func PrintStep(step int, total int, message string) {

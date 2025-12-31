@@ -11,13 +11,11 @@ import (
 	"strings"
 )
 
-// URLurl struct - hedef URL bilgilerini tutar
 type URLurl struct {
 	Name string
 	URL  string
 }
 
-// ReadTargets targets.yaml dosyasından hedef URL'leri okur
 func ReadTargets(filename string) ([]URLurl, error) {
 	data, err := os.ReadFile(filename)
 	if err != nil {
@@ -30,19 +28,16 @@ func ReadTargets(filename string) ([]URLurl, error) {
 	for _, line := range lines {
 		line = strings.TrimSpace(line)
 
-		// Boş satır veya yorum atla
 		if line == "" || strings.HasPrefix(line, "#") {
 			continue
 		}
 
-		// "Name | URL" veya sadece "URL" formatı
 		if strings.Contains(line, "|") {
 			parts := strings.SplitN(line, "|", 2)
 			name := strings.TrimSpace(parts[0])
 			url := strings.TrimSpace(parts[1])
 			targets = append(targets, URLurl{Name: name, URL: url})
 		} else {
-			// Sadece URL varsa, domain'den isim üret
 			url := strings.TrimSpace(line)
 			name := extractNameFromURL(url)
 			targets = append(targets, URLurl{Name: name, URL: url})
@@ -52,18 +47,14 @@ func ReadTargets(filename string) ([]URLurl, error) {
 	return targets, nil
 }
 
-// extractNameFromURL URL'den okunabilir bir isim çıkarır
 func extractNameFromURL(url string) string {
-	// http:// veya https:// kaldır
 	url = strings.TrimPrefix(url, "http://")
 	url = strings.TrimPrefix(url, "https://")
 
-	// .onion'dan önceki kısmı al
 	if idx := strings.Index(url, ".onion"); idx != -1 {
 		url = url[:idx]
 	}
 
-	// İlk 15 karakteri al (çok uzun olmasın)
 	if len(url) > 15 {
 		url = url[:15] + "..."
 	}
@@ -100,7 +91,6 @@ func main() {
 	PrintStep(3, 5, "Tor IP doğrulanıyor...")
 	testTorIP(client)
 
-	// Ana döngü - kullanıcı çıkana kadar devam eder
 	for {
 		PrintStep(4, 5, "URL seçimi...")
 		selectedURLs, exit := ShowMenu(urls)
@@ -126,7 +116,6 @@ func main() {
 		PrintSuccess("Tarama tamamlandı!")
 		fmt.Println()
 
-		// Kullanıcıdan yeni tarama için onay bekle
 		fmt.Print("Yeni tarama yapmak için Enter'a basın (çıkmak için 'q' yazın): ")
 		reader := bufio.NewReader(os.Stdin)
 		input, _ := reader.ReadString('\n')
@@ -188,7 +177,6 @@ func ShowMenu(urls []URLurl) ([]URLurl, bool) {
 		input, _ := reader.ReadString('\n')
 		input = strings.TrimSpace(input)
 
-		// Çıkış kontrolü
 		if input == "0" {
 			return nil, true
 		}
@@ -214,7 +202,7 @@ func ShowMenu(urls []URLurl) ([]URLurl, bool) {
 		}
 
 		if len(selected) == 0 {
-			fmt.Println("\n⚠ Geçerli seçim yapılmadı! Lütfen tekrar deneyin.\n")
+			fmt.Println("\n⚠ Geçerli seçim yapılmadı! Lütfen tekrar deneyin.")
 			continue
 		}
 

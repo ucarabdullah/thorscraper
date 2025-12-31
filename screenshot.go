@@ -55,7 +55,6 @@ func TakeScreenshot(url, filename string, torPort int) error {
 		return fmt.Errorf("screenshot alınamadı: %v", err)
 	}
 
-	// Dosyaya kaydet
 	if err := os.WriteFile(screenshotPath, buf, 0644); err != nil {
 		return fmt.Errorf("screenshot kaydedilemedi: %v", err)
 	}
@@ -64,7 +63,6 @@ func TakeScreenshot(url, filename string, torPort int) error {
 	return nil
 }
 
-// TakeScreenshotSimple basit hata yönetimi ile screenshot alır
 func TakeScreenshotSimple(url, name string, torPort int) bool {
 	filename := sanitizeFilename(name) + "_" + time.Now().Format("20060102_150405") + ".png"
 
@@ -72,7 +70,6 @@ func TakeScreenshotSimple(url, name string, torPort int) bool {
 
 	err := TakeScreenshot(url, filename, torPort)
 	if err != nil {
-		// Sadece loga yaz
 		LogWarning("Screenshot atlandı (%s): Site yavaş veya erişilemez", name)
 		return false
 	}

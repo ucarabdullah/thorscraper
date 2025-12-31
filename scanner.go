@@ -9,7 +9,6 @@ import (
 	"time"
 )
 
-// ScanResult her URL taramasının sonucunu tutar
 type ScanResult struct {
 	Name           string    `json:"name"`
 	URL            string    `json:"url"`
@@ -21,7 +20,6 @@ type ScanResult struct {
 	ScreenshotFile string    `json:"screenshot_file,omitempty"`
 }
 
-// ScanURL bir URL'yi tarar ve sonucu döndürür
 func ScanURL(client *http.Client, url URLurl, torPort string) ScanResult {
 	result := ScanResult{
 		Name:      url.Name,
@@ -30,10 +28,8 @@ func ScanURL(client *http.Client, url URLurl, torPort string) ScanResult {
 		Success:   false,
 	}
 
-	// KULLANICI: Sadece site adı
 	fmt.Printf("🔍 Scanning %s: %s", url.Name, url.URL)
 
-	// LOG: Detaylı bilgi
 	LogInfo("========================================")
 	LogInfo("TARAMA: %s", url.Name)
 	LogInfo("URL: %s", url.URL)
@@ -56,7 +52,6 @@ func ScanURL(client *http.Client, url URLurl, torPort string) ScanResult {
 	req.Header.Set("Connection", "keep-alive")
 	req.Header.Set("Upgrade-Insecure-Requests", "1")
 
-	// HTTP isteği gönder
 	LogInfo("İstek gönderiliyor...")
 	resp, err := client.Do(req)
 	if err != nil {
@@ -67,13 +62,11 @@ func ScanURL(client *http.Client, url URLurl, torPort string) ScanResult {
 	}
 	defer resp.Body.Close()
 
-	// Başarılı
 	result.StatusCode = resp.StatusCode
 	result.Success = true
 
 	LogDebug("Response alındı - Status: %d", resp.StatusCode)
 
-	// Response body'yi oku
 	var reader io.Reader = resp.Body
 	if resp.Header.Get("Content-Encoding") == "gzip" {
 		LogDebug("Gzip sıkıştırması tespit edildi, açılıyor...")
@@ -90,10 +83,8 @@ func ScanURL(client *http.Client, url URLurl, torPort string) ScanResult {
 
 	LogSuccess("Sayfa indirildi - Status: %d, Boyut: %d bytes", resp.StatusCode, bodySize)
 
-	// KULLANICI: Başarı mesajı
 	fmt.Printf(" ✓ OK (%d)\n", resp.StatusCode)
 
-	// HTML içeriğini kaydet
 	LogDebug("HTML kaydediliyor...")
 	if err := SaveHTMLToFile(url.Name, bodyBytes); err != nil {
 		LogWarning("HTML kaydedilemedi: %v", err)
@@ -102,7 +93,6 @@ func ScanURL(client *http.Client, url URLurl, torPort string) ScanResult {
 		LogSuccess("HTML kaydedildi: %s", result.SavedFile)
 	}
 
-	// Screenshot
 	if result.Success && result.StatusCode == 200 {
 		LogInfo("Screenshot alınıyor...")
 		fmt.Print("📸 Screenshot alınıyor...")
@@ -123,7 +113,6 @@ func ScanURL(client *http.Client, url URLurl, torPort string) ScanResult {
 	return result
 }
 
-// ScanAllURLs tüm URL'leri sırayla tarar
 func ScanAllURLs(client *http.Client, urls []URLurl, torPort string) []ScanResult {
 	results := []ScanResult{}
 
@@ -132,7 +121,6 @@ func ScanAllURLs(client *http.Client, urls []URLurl, torPort string) []ScanResul
 	LogInfo("========================================")
 
 	for i, url := range urls {
-		// KULLANICI: Minimal bilgi
 		fmt.Printf("[%d/%d] ", i+1, len(urls))
 
 		result := ScanURL(client, url, torPort)
@@ -149,7 +137,6 @@ func ScanAllURLs(client *http.Client, urls []URLurl, torPort string) []ScanResul
 	return results
 }
 
-// PrintSummary tarama özetini gösterir
 func PrintSummary(results []ScanResult) {
 	successCount := 0
 	failCount := 0
@@ -180,7 +167,6 @@ func PrintSummary(results []ScanResult) {
 		}
 	}
 
-	// LOG dosyasına detaylı özet
 	LogInfo("========== ÖZET ==========")
 	LogInfo("Başarılı: %d", successCount)
 	LogInfo("Başarısız: %d", failCount)
