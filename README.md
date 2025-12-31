@@ -63,7 +63,7 @@ tor
 4. `ThorScraper.exe` dosyasını çalıştır
 
 ```powershell
-git clone https://github.com/KULLANICI_ADIN/ThorScraper.git
+git clone https://github.com/ucarabdullah/ThorScraper.git
 cd ThorScraper
 .\ThorScraper.exe
 ```
