@@ -12,7 +12,6 @@ scraped_data/
 *.html
 
 # Build outputs
-*.exe
 *.dll
 *.so
 *.dylib
