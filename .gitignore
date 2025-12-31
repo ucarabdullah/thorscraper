@@ -1,0 +1,32 @@
+# Logs
+logs/
+*.log
+
+# Screenshots
+screenshots/
+*.png
+*.jpg
+
+# Scraped Data
+scraped_data/
+*.html
+
+# Build outputs
+*.exe
+*.dll
+*.so
+*.dylib
+
+# Test binary
+*.test
+
+# Go workspace file
+go.work
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
